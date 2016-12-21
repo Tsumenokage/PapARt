@@ -2,11 +2,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>fr.inria</groupId>
-    <artifactId>papart</artifactId>
+    <artifactId>papart-deps</artifactId>
     <version>0.7-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>PapARt</name>
+    <name>PapARt-deps</name>
     <description>Paper Augmented Reality Toolkit</description>
     <url>http://papart.gforge.inria.fr</url>
     
@@ -49,108 +49,11 @@
     
     
     <properties>
-        <platform>${os.name}-${os.arch}</platform> <!-- For Android: -Dplatform=android-arm                                        -->
+        <platform>windows-${os.arch}</platform> <!-- For Android: -Dplatform=android-arm                                        -->
     </properties>
     
     <dependencies>
-        <!--We distribute with PapARt-->
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.9.9</version>
-        </dependency>
-
-        <!--Processing core-->
-        <dependency>
-            <groupId>org.processing</groupId>
-            <artifactId>core</artifactId>
-            <version>3.2.3</version>
-        </dependency>
-
-        <!--Processing OpenGL-->
-        <dependency>
-            <groupId>org.jogamp.jogl</groupId>
-            <artifactId>jogl</artifactId>
-            <version>2.3.2</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jogamp.jogl</groupId>
-            <artifactId>jogl-all</artifactId>
-            <version>2.3.2</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jogamp.gluegen</groupId>
-            <artifactId>gluegen-rt-main</artifactId>
-            <version>2.3.2</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jogamp.jogl</groupId>
-            <artifactId>newt-main</artifactId>
-            <version>2.3.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jogamp.jogl</groupId>
-            <artifactId>nativewindow-main</artifactId>
-            <version>2.3.2</version>
-        </dependency>
-        
-        <!--Processing Video-->
-        <dependency>
-            <groupId>org.processing</groupId>
-            <artifactId>video</artifactId>
-            <version>3.2.3</version>
-        </dependency>
-        
-        
-        <dependency>
-            <groupId>com.googlecode.gstreamer-java</groupId>
-            <artifactId>gstreamer-java</artifactId>
-            <version>1.5</version>
-        </dependency>
-        
-        <!-- Processing libraries -->
-        
-        <!--We package and distribute--> 
-        <dependency>
-            <groupId>tech.lity.rea</groupId>
-            <artifactId>SVGExtended</artifactId>
-            <version>3.2.1</version>
-        </dependency>
-        
-         <!--We package and distribute--> 
-        <dependency>
-            <groupId>fr.inria.potioc</groupId>
-            <artifactId>ProcessingTUIO</artifactId>
-            <version>1.1.0</version>
-        </dependency>
-        
-         <!--We package and distribute--> 
-        <dependency>
-            <groupId>org.clojars.frederikdb</groupId>
-            <artifactId>oscp5</artifactId>
-            <version>0.9.8-SNAPSHOT</version>
-        </dependency>
-        
-        <!--Toxiclibs already packaged, we distribute -->
-        <dependency>
-            <groupId>org.clojars.hozumi</groupId>
-            <artifactId>toxiclibscore</artifactId>
-            <version>0022</version>
-        </dependency>
-        
-        <!--We package and distribute--> 
-        <dependency>
-            <groupId>fr.inria.potioc</groupId>
-            <artifactId>skatolo</artifactId>
-            <version>1.0</version>
-        </dependency>
-        
-
-        <!--JavaCPP-presets et JavaCV -->
+           <!--JavaCPP-presets et JavaCV -->
         <!--We package and distribute--> 
         <dependency>
             <groupId>org.bytedeco</groupId>
@@ -250,47 +153,21 @@
             <scope>runtime</scope>
         </dependency>-->
         
-        <dependency>
-            <groupId>org.bytedeco.javacpp-presets</groupId>
-            <artifactId>librealsense</artifactId>
-            <version>1.9.6-1.3</version>
-        </dependency>
+        <!-- <dependency> -->
+        <!--     <groupId>org.bytedeco.javacpp-presets</groupId> -->
+        <!--     <artifactId>librealsense</artifactId> -->
+        <!--     <version>1.9.6-1.3</version> -->
+        <!-- </dependency> -->
         
-        <dependency>
-            <groupId>org.bytedeco.javacpp-presets</groupId>
-            <artifactId>librealsense</artifactId>
-            <version>1.9.6-1.3</version>
-            <classifier>${platform}</classifier>
-            <scope>runtime</scope>
-        </dependency>
-      
-
-        
-        <!--Tests no packaging no distribution --> 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.7</version>
-            <scope>test</scope>
-        </dependency>
-        
-  
+        <!-- <dependency> -->
+        <!--     <groupId>org.bytedeco.javacpp-presets</groupId> -->
+        <!--     <artifactId>librealsense</artifactId> -->
+        <!--     <version>1.9.6-1.3</version> -->
+        <!--     <classifier>${platform}</classifier> -->
+        <!--     <scope>runtime</scope> -->
+        <!-- </dependency> -->
+              
     </dependencies>
-    
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
-                <configuration>
-                    <docencoding>utf-8</docencoding>
-                    <failOnError>false</failOnError>
-                    <additionalparam>-Xdoclint:none</additionalparam>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
     
     <build>
         <sourceDirectory>src</sourceDirectory>
