@@ -31,8 +31,8 @@ import static fr.inria.papart.depthcam.analysis.DepthAnalysis.INVALID_POINT;
 import static fr.inria.papart.depthcam.analysis.DepthAnalysis.papplet;
 import fr.inria.papart.depthcam.devices.RealSense;
 import fr.inria.papart.procam.ProjectiveDeviceP;
-import fr.inria.papart.procam.utils.MathUtils;
-import fr.inria.papart.procam.utils.ARToolkitPlusUtils;
+import fr.inria.papart.utils.MathUtils;
+import fr.inria.papart.utils.ARToolkitPlusUtils;
 import fr.inria.papart.procam.camera.Camera;
 import fr.inria.papart.procam.camera.CameraRealSense;
 import java.nio.ByteBuffer;
@@ -73,7 +73,7 @@ public class KinectDepthAnalysis extends DepthAnalysis {
     protected DepthCameraDevice depthCameraDevice;
     protected DepthComputation depthComputationMethod;
 
-    private Camera colorCamera;
+    protected Camera colorCamera;
 
     public DepthCameraDevice getDepthCameraDevice() {
         return this.depthCameraDevice;
