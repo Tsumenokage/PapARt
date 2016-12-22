@@ -19,7 +19,7 @@
  */
 package fr.inria.papart.procam;
 
-import fr.inria.papart.procam.utils.ARToolkitPlusUtils;
+import fr.inria.papart.utils.ARToolkitPlusUtils;
 import fr.inria.papart.procam.camera.Camera;
 import fr.inria.papart.procam.display.BaseDisplay;
 import fr.inria.papart.multitouch.TouchInput;
@@ -28,7 +28,7 @@ import fr.inria.papart.multitouch.KinectTouchInput;
 import fr.inria.papart.multitouch.TUIOTouchInput;
 import fr.inria.papart.multitouch.TouchList;
 import fr.inria.papart.multitouch.TouchPoint;
-import fr.inria.papart.procam.utils.MathUtils;
+import fr.inria.papart.utils.MathUtils;
 import fr.inria.papart.procam.display.ProjectorDisplay;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -84,6 +84,7 @@ public class PaperTouchScreen extends PaperScreen {
     @Override
     public void setLocation(float x, float y, float z) {
         super.setLocation(x, y, z);
+        screen.computeScreenPosTransform(cameraTracking);
         updateTouch();
     }
 
@@ -93,8 +94,6 @@ public class PaperTouchScreen extends PaperScreen {
                 return;
             }
         }
-        screen.computeScreenPosTransform(cameraTracking);
-
         // Warning TODO: Hack.. V_V 
         // Touch in 2D  mode has boundaries. 
         // Touch in 3D mode has no boundaries. 
@@ -130,16 +129,8 @@ public class PaperTouchScreen extends PaperScreen {
                 // fill(185, 142, 62);
             } else {
                 fill(58, 71, 198);
-                 ellipse(t.position.x, t.position.y, ellipseSize, ellipseSize);
+                ellipse(t.position.x, t.position.y, ellipseSize, ellipseSize);
             }
-            // ellipse(t.position.x, t.position.y, ellipseSize, ellipseSize);
-
-//            ellipse(t.pposition.x, t.pposition.y, ellipseSize /2 , ellipseSize /2);
-//            pushMatrix();
-//            translate(t.position.x, t.position.y);
-//            ellipse(0, 0, ellipseSize, ellipseSize);
-//            line(0, 0, t.speed.x * 4, t.speed.y *4);
-//            popMatrix();
         }
     }
 
@@ -215,68 +206,6 @@ public class PaperTouchScreen extends PaperScreen {
         return dst;
     }
 
-    /**
-     * Unsafe do not use unless you are sure.
-     */
-    public int getColorOccurencesFrom(PVector coord, PImage cameraImage, int radius, int col, int threshold) {
-        int x = (int) coord.x;
-        int y = (int) coord.y;
-        int minX = PApplet.constrain(x - radius, 0, cameraTracking.width() - 1);
-        int maxX = PApplet.constrain(x + radius, 0, cameraTracking.width() - 1);
-        int minY = PApplet.constrain(y - radius, 0, cameraTracking.height() - 1);
-        int maxY = PApplet.constrain(y + radius, 0, cameraTracking.height() - 1);
-        int k = 0;
-        for (int j = minY; j <= maxY; j++) {
-            for (int i = minX; i <= maxX; i++) {
-                int offset = i + j * cameraTracking.width();
-                int pxCol = cameraImage.pixels[offset];
-                if (colorDist(col, pxCol) < threshold) {
-                    k++;
-                }
-            }
-        }
-        return k;
-    }
-
-    /**
-     * Unsafe do not use unless you are sure.
-     */
-    public int getColorOccurencesFrom(PVector coord, int radius, int col, int threshold) {
-        int x = (int) coord.x;
-        int y = (int) coord.y;
-        int minX = PApplet.constrain(x - radius, 0, cameraTracking.width() - 1);
-        int maxX = PApplet.constrain(x + radius, 0, cameraTracking.width() - 1);
-        int minY = PApplet.constrain(y - radius, 0, cameraTracking.height() - 1);
-        int maxY = PApplet.constrain(y + radius, 0, cameraTracking.height() - 1);
-
-        ByteBuffer buff = cameraTracking.getIplImage().getByteBuffer();
-
-        int k = 0;
-        for (int j = minY; j <= maxY; j++) {
-            for (int i = minX; i <= maxX; i++) {
-                int offset = i + j * cameraTracking.width();
-                int pxCol = getColor(buff, offset);
-                if (MathUtils.colorDistRGB(col, pxCol, threshold)) {
-                    k++;
-                }
-            }
-        }
-        return k;
-    }
-
-    public int getColorFrom3D(PVector point) {
-        return getColorAt(getPxCoordinates(point));
-    }
-
-    /**
-     * Unsafe do not use unless you are sure.
-     */
-    public PVector getPxCoordinates(PVector cameraTracking3DCoord) {
-        ProjectiveDeviceP pdp = cameraTracking.getProjectiveDevice();
-        PVector coord = pdp.worldToPixelCoord(cameraTracking3DCoord);
-        return coord;
-    }
-
     public int getColorAt(PVector coord) {
         int x = (int) coord.x;
         int y = (int) coord.y;
@@ -292,21 +221,17 @@ public class PaperTouchScreen extends PaperScreen {
                 | (buff.get(offset) & 0xFF);
     }
 
-    // TODO: move this to image analysis module
-    private int colorDist(int c1, int c2) {
-        int r1 = c1 >> 16 & 0xFF;
-        int g1 = c1 >> 8 & 0xFF;
-        int b1 = c1 >> 0 & 0xFF;
+    public int getColorFrom3D(PVector point) {
+        return getColorAt(getPxCoordinates(point));
+    }
 
-        int r2 = c2 >> 16 & 0xFF;
-        int g2 = c2 >> 8 & 0xFF;
-        int b2 = c2 >> 0 & 0xFF;
-
-        int dr = PApplet.abs(r1 - r2);
-        int dg = PApplet.abs(g1 - g2);
-        int db = PApplet.abs(b1 - b2);
-
-        return dr + dg + db;
+    /**
+     * Unsafe do not use unless you are sure.
+     */
+    public PVector getPxCoordinates(PVector cameraTracking3DCoord) {
+        ProjectiveDeviceP pdp = cameraTracking.getProjectiveDevice();
+        PVector coord = pdp.worldToPixelCoord(cameraTracking3DCoord);
+        return coord;
     }
 
     /**
